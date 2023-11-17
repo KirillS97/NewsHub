@@ -15,14 +15,14 @@ final class CategoryCollectionView: UICollectionView {
     // MARK: Свойства объектов класса
     private let flowLayout = UICollectionViewFlowLayout()
     
-    private let lineSpacing       = CGFloat(10)
-    private let interItemSpacing  = CGFloat(10)
-    private let horizontalIndent  = CGFloat(10)
-    private let verticalIndent    = CGFloat(10)
+    private let lineSpacing       = CGFloat(23.25)
+    private let interItemSpacing  = CGFloat(23.25)
+    private let horizontalIndent  = CGFloat(23.25)
+    private let verticalIndent    = CGFloat(23.25)
     
     private let differenceBetweenCellHeightAndWidth: CGFloat = 0
     
-    private let numberOfColumnsForCells = 4
+    private let numberOfColumnsForCells = 3
     private let numberOfRowsForCells: Int
     
     // MARK: Инициализаторы
@@ -43,14 +43,21 @@ final class CategoryCollectionView: UICollectionView {
 // MARK: - Конфигурирование CategoryCollectionView
 extension CategoryCollectionView {
     
+    // MARK: Настройка коллекции
     private func setUpCategoryCollectionView() -> Void {
         self.setUpFlowLayout()
         self.register(CategoryCell.self, forCellWithReuseIdentifier: CategoryCell.reuseId)
         self.isScrollEnabled = false
         self.showsVerticalScrollIndicator = false
-        self.backgroundColor = .systemBlue
+        self.setUpBackgroundColor()
     }
     
+    // MARK: Установка цвета фона
+    private func setUpBackgroundColor() -> Void {
+        self.backgroundColor = .none
+    }
+    
+    // MARK: Настройка UICollectionViewFlowLayout
     private func setUpFlowLayout() -> Void {
         self.flowLayout.scrollDirection = .vertical
         self.flowLayout.minimumLineSpacing = self.lineSpacing
@@ -69,7 +76,7 @@ extension CategoryCollectionView {
 extension CategoryCollectionView {
     
     // MARK: getCellSize
-    // Используется в CategorySelectionSceneViewController для получения такого размера ячейки, который бы позволил разделить коллекцию на 4 столбца, расстояние между которыми бы точно соответствовало размеру interItemSpacing при отступах от левой и правой границ коллекции до ближайших столбцов, равных horizontalIndent. Таким образом, данный метод позволяет сделать размер ячейки адаптивным в зависимости от размеров экрана.
+    // Используется в CategorySelectionSceneViewController для получения такого размера ячейки, который бы позволил разделить коллекцию на 4 столбца, расстояние между которыми бы точно соответствовало размеру interItemSpacing при отступах от левой и правой границ коллекции до ближайших столбцов, равных horizontalIndent. Округление ширины ячейки до 3 знака используется т.к. не всегда рассчетная ширина получается точной. Таким образом, данный метод позволяет сделать размер ячейки адаптивным в зависимости от размеров экрана.
     func getCellSize() -> CGSize {
         let firstTerm  = self.frame.width / CGFloat(self.numberOfColumnsForCells)
         let secondTerm = -1 * self.interItemSpacing
@@ -77,9 +84,11 @@ extension CategoryCollectionView {
         let fourthTerm = (-2 * self.horizontalIndent) / CGFloat(self.numberOfColumnsForCells)
         
         let cellWidth  = firstTerm + secondTerm + thirdTerm + fourthTerm
-        let cellHeight = cellWidth + self.differenceBetweenCellHeightAndWidth
         
-        return CGSize(width: cellWidth, height: cellHeight)
+        let cellRoundedWidth = (cellWidth * 1000).rounded(.down) / 1000
+        let cellHeight = cellRoundedWidth + self.differenceBetweenCellHeightAndWidth
+        
+        return CGSize(width: cellRoundedWidth, height: cellHeight)
     }
     
     // MARK: getCollectionViewHeightMultiplier
