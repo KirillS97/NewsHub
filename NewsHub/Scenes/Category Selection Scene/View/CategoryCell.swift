@@ -21,6 +21,14 @@ final class CategoryCell: UICollectionViewCell {
     private var nameLabel         : UILabel!
     private var verticalStackView : UIStackView!
     
+    private var isChosen          : Bool = false {
+        didSet {
+            if self.isChosen != oldValue {
+                self.choiseStateHasBeenChanged()
+            }
+        }
+    }
+    
     // MARK: Инициализаторы
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -48,10 +56,8 @@ extension CategoryCell {
     // MARK: Настройка вью под иконкой ячейки
     private func setUpIconBackgroundView() -> Void {
         self.iconBackgroundView = UIView()
-        self.iconBackgroundView.backgroundColor = .systemGray5
+        self.iconBackgroundView.backgroundColor = .systemGray6
         self.iconBackgroundView.layer.cornerRadius = 15
-        self.iconBackgroundView.layer.borderWidth = 5
-        self.iconBackgroundView.layer.borderColor = UIColor.systemYellow.cgColor
         self.addConstraintsToIconBackgroundView()
     }
     
@@ -62,10 +68,18 @@ extension CategoryCell {
     // MARK: Настройка метки с названием ячейки
     private func setUpNameLabel() -> Void {
         self.nameLabel = UILabel()
-        self.nameLabel.font = .systemFont(ofSize: 15, weight: .regular)
-        self.nameLabel.textColor = .black
-        self.nameLabel.backgroundColor = .white
+        self.setUpNameLabelTextAttributes()
         self.nameLabel.setContentCompressionResistancePriority(.required, for: .vertical)
+    }
+    
+    private func setUpNameLabelTextAttributes() -> Void {
+        if self.isChosen {
+            self.nameLabel.textColor = .black
+            self.nameLabel.font = .systemFont(ofSize: 15, weight: .semibold)
+        } else {
+            self.nameLabel.textColor = .systemGray
+            self.nameLabel.font = .systemFont(ofSize: 15, weight: .regular)
+        }
     }
     
     // MARK: Настройка вертикального стека
@@ -76,7 +90,7 @@ extension CategoryCell {
         self.verticalStackView.axis = .vertical
         self.verticalStackView.alignment = .center
         self.verticalStackView.distribution = .fill
-        self.verticalStackView.backgroundColor = .systemBlue
+        self.verticalStackView.setCustomSpacing(5, after: self.iconBackgroundView)
     }
     
     private func addConstraintsToVerticalStackView() -> Void {
@@ -94,7 +108,6 @@ extension CategoryCell {
         self.iconView = UIImageView()
         self.iconBackgroundView.addSubview(self.iconView)
         self.addConstraintsToIconView()
-        self.iconView.image = UIImage(named: "business")
     }
     
     private func addConstraintsToIconView() -> Void {
@@ -111,13 +124,44 @@ extension CategoryCell {
         ])
     }
     
+    private func setUpIconViewImageColor() -> Void {
+        if self.isChosen {
+            if let image = self.iconView.image {
+                self.iconView.image = image.withTintColor(.systemBlue)
+            }
+        } else {
+            if let image = self.iconView.image {
+                self.iconView.image = image.withTintColor(.systemGray)
+            }
+        }
+    }
+    
+    private func choiseStateHasBeenChanged() -> Void {
+        self.setUpNameLabelTextAttributes()
+        self.setUpIconViewImageColor()
+    }
+    
 }
 
 
 
 // MARK: - Публичные методы
 extension CategoryCell {
+    
+    // MARK: Установка названия для ячейки
     func setNameLabelText(text: String) -> Void {
         self.nameLabel.text = text
     }
+    
+    // MARK: Установка изображения для икноки
+    func setIconImage(image: UIImage) -> Void {
+        let grayImage = image.withTintColor(.systemGray)
+        self.iconView.image = grayImage
+    }
+    
+    // MARK: Срабатывает при нажатии на ячейку
+    func changeChoiseState(isChosen: Bool) -> Void {
+        self.isChosen = isChosen
+    }
+    
 }
