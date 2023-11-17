@@ -18,7 +18,7 @@ final class CategorySelectionSceneView: UIView {
     private (set) var collectionView: UICollectionView!
     private var noticeLabel         : UILabel!
     private var buttonOk            : UIButton!
-    private var stackView           : UIStackView!
+    private var scrollView          : UIScrollView!
     
     // MARK: Инициализаторы
     init(frame: CGRect, categoriesNumber: Int) {
@@ -38,46 +38,102 @@ final class CategorySelectionSceneView: UIView {
 extension CategorySelectionSceneView {
     
     private func setUpCategorySelectionSceneView(categoriesNumber: Int) -> Void {
+        self.setUpScrollView()
         self.setUpNameLabel()
         self.setUpDescriptionLabel()
         self.setUpCollectionView(categoriesNumber: categoriesNumber)
         self.setUpNoticeLabel()
         self.setUpButtonOk()
-        self.setUpStackView()
         self.setUpBackgroundColor()
     }
     
     private func setUpBackgroundColor() -> Void {
-        self.backgroundColor = .systemGray
+        self.backgroundColor = .white
+    }
+    
+    private func setUpScrollView() -> Void {
+        self.scrollView = UIScrollView()
+        self.addSubview(self.scrollView)
+        self.addConstraintsToScrollView()
+        self.scrollView.backgroundColor = .white
+    }
+    
+    private func addConstraintsToScrollView() -> Void {
+        self.scrollView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            self.scrollView.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor),
+            self.scrollView.leadingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.leadingAnchor),
+            self.scrollView.bottomAnchor.constraint(equalTo: self.safeAreaLayoutGuide.bottomAnchor),
+            self.scrollView.trailingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.trailingAnchor),
+            self.scrollView.contentLayoutGuide.widthAnchor.constraint(equalTo: self.scrollView.widthAnchor)
+        ])
     }
     
     private func setUpNameLabel() -> Void {
         self.nameLabel = UILabel()
+        self.scrollView.addSubview(self.nameLabel)
+        self.addConsraintsToNameLabel()
         self.nameLabel.text = "Выберите одну или несколько категорий"
         self.nameLabel.numberOfLines = 0
         self.nameLabel.textColor = .black
-        self.nameLabel.backgroundColor = .white
         self.nameLabel.font = .systemFont(ofSize: 30, weight: .bold)
-        self.nameLabel.setContentHuggingPriority(.required, for: .vertical)
+    }
+    
+    private func addConsraintsToNameLabel() -> Void {
+        self.nameLabel.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            self.nameLabel.topAnchor.constraint(equalTo: self.scrollView.contentLayoutGuide.topAnchor, constant: 10),
+            self.nameLabel.leadingAnchor.constraint(equalTo: self.scrollView.contentLayoutGuide.leadingAnchor, constant: 10),
+            self.nameLabel.trailingAnchor.constraint(equalTo: self.scrollView.contentLayoutGuide.trailingAnchor, constant: -10)
+        ])
     }
     
     private func setUpDescriptionLabel() -> Void {
         self.descriptionLabel = UILabel()
+        self.scrollView.addSubview(self.descriptionLabel)
+        self.addConsraintsToDescriptionLabel()
         self.descriptionLabel.text = "Вам будут предложены новости только по выбранным категориям"
         self.descriptionLabel.numberOfLines = 0
         self.descriptionLabel.textColor = .systemGray2
-        self.descriptionLabel.backgroundColor = .white
         self.descriptionLabel.font = .systemFont(ofSize: 17, weight: .regular)
         self.descriptionLabel.setContentHuggingPriority(.required, for: .vertical)
     }
     
+    private func addConsraintsToDescriptionLabel() -> Void {
+        self.descriptionLabel.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            self.descriptionLabel.topAnchor.constraint(equalTo: self.nameLabel.bottomAnchor, constant: 10),
+            self.descriptionLabel.leadingAnchor.constraint(equalTo: self.nameLabel.leadingAnchor),
+            self.descriptionLabel.trailingAnchor.constraint(equalTo: self.nameLabel.trailingAnchor)
+        ])
+    }
+    
     private func setUpCollectionView(categoriesNumber: Int) -> Void {
         self.collectionView = CategoryCollectionView(frame: .zero, categoriesNumber: categoriesNumber)
-        self.collectionView.backgroundColor = .systemBlue
+        self.scrollView.addSubview(self.collectionView)
+        self.addConstraintsToCollectionView()
+    }
+    
+    private func addConstraintsToCollectionView() -> Void {
+        self.collectionView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            self.collectionView.leadingAnchor.constraint(equalTo: self.scrollView.contentLayoutGuide.leadingAnchor),
+            self.collectionView.trailingAnchor.constraint(equalTo: self.scrollView.contentLayoutGuide.trailingAnchor),
+            self.collectionView.topAnchor.constraint(equalTo: self.descriptionLabel.bottomAnchor, constant: 50)
+        ])
+        if let categoryCollectionView = self.collectionView as? CategoryCollectionView {
+            NSLayoutConstraint.activate([
+                self.collectionView.heightAnchor.constraint(equalTo: self.collectionView.widthAnchor,
+                                                            multiplier: categoryCollectionView.getCollectionViewHeightMultiplier(),
+                                                            constant: categoryCollectionView.getCollectionViewHeightConstant())
+            ])
+        }
     }
     
     private func setUpNoticeLabel() -> Void {
         self.noticeLabel = UILabel()
+        self.scrollView.addSubview(self.noticeLabel)
+        self.addConstraitsToNoticeLabel()
         self.noticeLabel.text = "Выбранные категории: 0"
         self.noticeLabel.numberOfLines = 0
         self.noticeLabel.layoutMargins.bottom = 300
@@ -86,52 +142,40 @@ extension CategorySelectionSceneView {
         self.noticeLabel.backgroundColor = .white
     }
     
+    private func addConstraitsToNoticeLabel() -> Void {
+        self.noticeLabel.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            self.noticeLabel.leadingAnchor.constraint(equalTo: self.nameLabel.leadingAnchor),
+            self.noticeLabel.trailingAnchor.constraint(equalTo: self.nameLabel.trailingAnchor),
+            self.noticeLabel.topAnchor.constraint(equalTo: self.collectionView.bottomAnchor, constant: 20),
+            
+            self.scrollView.contentLayoutGuide.bottomAnchor.constraint(equalTo: self.noticeLabel.bottomAnchor, constant: 100)
+        ])
+    }
+    
     private func setUpButtonOk() -> Void {
         self.buttonOk = UIButton()
+        self.addSubview(self.buttonOk)
+        self.addConstraintsToButtonOk()
         self.buttonOk.setTitle("Готово", for: .normal)
-        self.buttonOk.titleLabel?.font = .systemFont(ofSize: 17, weight: .semibold)
+        self.buttonOk.titleLabel?.font = .systemFont(ofSize: 20, weight: .semibold)
         self.buttonOk.setTitleColor(.white, for: .normal)
         self.buttonOk.setTitleColor(.systemGray3, for: .highlighted)
         self.buttonOk.backgroundColor = .systemBlue
+        self.buttonOk.layer.cornerRadius = 12.5
     }
     
-    private func setUpStackView() -> Void {
-        self.stackView = UIStackView()
-        self.addSubview(self.stackView)
-        self.stackView.backgroundColor = .systemGray5
-        self.stackView.axis = .vertical
-        self.stackView.alignment = .center
-        self.stackView.distribution = .fill
-        self.stackView.spacing = 0
-        self.stackView.addArrangedSubview(self.nameLabel)
-        self.stackView.setCustomSpacing(10, after: self.nameLabel)
-        self.stackView.addArrangedSubview(self.descriptionLabel)
-        self.stackView.addArrangedSubview(self.collectionView)
-        self.stackView.addArrangedSubview(self.noticeLabel)
-        self.stackView.addArrangedSubview(self.buttonOk)
-        self.addConstraintsToStackView()
-    }
-    
-    private func addConstraintsToStackView() -> Void {
-        self.stackView.translatesAutoresizingMaskIntoConstraints = false
+    private func addConstraintsToButtonOk() -> Void {
+        self.buttonOk.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            self.stackView.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor),
-            self.stackView.leadingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.leadingAnchor),
-            self.stackView.bottomAnchor.constraint(equalTo: self.safeAreaLayoutGuide.bottomAnchor),
-            self.stackView.trailingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.trailingAnchor),
-            
-            self.nameLabel.widthAnchor.constraint(equalTo: self.stackView.widthAnchor, multiplier: 1),
-            
-            self.descriptionLabel.widthAnchor.constraint(equalTo: self.stackView.widthAnchor, multiplier: 1),
-            
-            self.collectionView.widthAnchor.constraint(equalTo: self.stackView.widthAnchor, multiplier: 1),
-            self.collectionView.heightAnchor.constraint(equalTo: self.collectionView.widthAnchor,
-                                                        multiplier: (self.collectionView as! CategoryCollectionView).getCollectionViewHeightMultiplier(),
-                                                        constant: (self.collectionView as! CategoryCollectionView).getCollectionViewHeightConstant()),
-            
-            self.buttonOk.widthAnchor.constraint(equalTo: self.collectionView.widthAnchor, multiplier: 1, constant: -20)
+            self.buttonOk.bottomAnchor.constraint(equalTo: self.scrollView.bottomAnchor, constant: -20),
+            self.buttonOk.leadingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.leadingAnchor, constant: 20),
+            self.buttonOk.trailingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.trailingAnchor, constant: -20),
+            self.buttonOk.heightAnchor.constraint(equalToConstant: self.buttonOk.intrinsicContentSize.height + 10)
         ])
     }
+    
+
     
 }
 
@@ -148,6 +192,22 @@ extension CategorySelectionSceneView {
         self.collectionView.dataSource = dataSource
     }
     
+    func setChosenCategoriesCount(count: Int) -> Void {
+        self.noticeLabel.text = "Выбранные категории: \(count)"
+        if self.noticeLabel.textColor != .systemGray {
+            self.noticeLabel.textColor = .systemGray
+        }
+    }
+    
+    func note() -> Void {
+        self.noticeLabel.text = "Выберите хотя бы одну категорию!"
+        self.noticeLabel.textColor = .systemRed
+    }
+    
+    func addTargetToButtonOk(target: Any? , action: Selector) -> Void {
+        self.buttonOk.addTarget(target, action: action, for: .touchUpInside)
+    }
+
 }
 
 
