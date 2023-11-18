@@ -44,3 +44,11 @@ extension NewsCategory {
     }
     
 }
+
+
+
+
+// MARK: - + Codable
+extension NewsCategory: Codable {
+    
+}
