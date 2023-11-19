@@ -12,8 +12,10 @@ import UIKit
 // MARK: - CategorySelectionSceneViewController
 final class CategorySelectionSceneViewController: UIViewController {
     
+    // MARK: Свойства объекта класса
     private var viewModel = CategoriesViewModel()
     
+    // MARK: LoadView
     override func loadView() {
         super.loadView()
         let categorySelectionView = CategorySelectionSceneView(frame: .zero, categoriesNumber: self.viewModel.allCategoriesArray.count)
@@ -22,26 +24,19 @@ final class CategorySelectionSceneViewController: UIViewController {
         categorySelectionView.addTargetToButtonOk(target: self, action: #selector(self.buttonOkHander))
         categorySelectionView.setChosenCategoriesCount(count: self.viewModel.chosenCategoriesArray.count)
         self.view = categorySelectionView
-        
     }
     
+    // MARK: ViewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
         self.bindVCWithViewModel()
     }
     
+    // MARK: SupportedInterfaceOrientations
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
         return .portrait
     }
     
-    /*
-    override func viewWillLayoutSubviews() {
-        super.viewWillLayoutSubviews()
-        if let categorySelectionSceneView = self.view as? CategorySelectionSceneView {
-            categorySelectionSceneView.collectionView.collectionViewLayout.invalidateLayout()
-        }
-    }
-    */
     
 }
 
