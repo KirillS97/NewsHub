@@ -13,8 +13,9 @@ import Foundation
 final class CategoriesViewModel {
     
     // MARK: Свойства объектов класса
+    private let chosenCategoriesStorageManager: NewsCategoriesStorageManagerProtocol = NewsCategoriesStorageManager.shared
     let allCategoriesArray: [NewsCategory]
-    var chosenCategoriesArray: [NewsCategory]
+    private (set) var chosenCategoriesArray: [NewsCategory]
     let lastChangedCategory: Observable<NewsCategory?>
     
     // MARK: Инициализаторы
@@ -24,8 +25,12 @@ final class CategoriesViewModel {
             categoriesArray.append(category)
         }
         self.allCategoriesArray    = categoriesArray
-        self.chosenCategoriesArray = []
         self.lastChangedCategory   = .init(value: nil)
+        if let chosenCategories = self.chosenCategoriesStorageManager.fetch() {
+            self.chosenCategoriesArray = chosenCategories
+        } else {
+            self.chosenCategoriesArray = []
+        }
     }
     
 }
@@ -48,6 +53,10 @@ extension CategoriesViewModel {
         self.lastChangedCategory.value = category
     }
     
+    func saveChosenNewsCategories() -> Void {
+        self.chosenCategoriesStorageManager.save(arrayOfCategories: self.chosenCategoriesArray)
+    }
+    
     func getCategoryNameFromAllCategoriesArray(itemNumber: Int) -> String? {
         guard self.allCategoriesArray.indices.contains(itemNumber) else {
             return nil
@@ -60,6 +69,13 @@ extension CategoriesViewModel {
             return nil
         }
         return self.allCategoriesArray[itemNumber].getImageName()
+    }
+    
+    func isThisCategoryIsChosen(itemNumber: Int) -> Bool {
+        guard self.allCategoriesArray.indices.contains(itemNumber) else {
+            return false
+        }
+        return self.chosenCategoriesArray.contains(self.allCategoriesArray[itemNumber])
     }
     
 }
