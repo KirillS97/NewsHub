@@ -9,7 +9,7 @@ import Foundation
 
 
 
-protocol ChosenNewsCategoriesStorageManagerProtocol {
+protocol NewsCategoriesStorageManagerProtocol {
     func save(arrayOfCategories: [NewsCategory]) -> Void
     func fetch() -> [NewsCategory]?
 }
