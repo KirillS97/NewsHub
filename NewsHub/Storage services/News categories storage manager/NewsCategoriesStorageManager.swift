@@ -9,11 +9,11 @@ import Foundation
 
 
 
-// MARK: - ChosenNewsCategoriesStorageManager
-final class ChosenNewsCategoriesStorageManager: ChosenNewsCategoriesStorageManagerProtocol {
+// MARK: - NewsCategoriesStorageManager
+final class NewsCategoriesStorageManager: NewsCategoriesStorageManagerProtocol {
     
     // MARK: Реализация singleton
-    static let shared = ChosenNewsCategoriesStorageManager()
+    static let shared = NewsCategoriesStorageManager()
     private init() {}
     
     // MARK: Хранимые свойства объекта класса
@@ -37,7 +37,7 @@ final class ChosenNewsCategoriesStorageManager: ChosenNewsCategoriesStorageManag
 
 
 // MARK: - Приватные методы
-extension ChosenNewsCategoriesStorageManager {
+extension NewsCategoriesStorageManager {
     
     // MARK: Создание папки, в которой будет расположен файл хранения
     private func createFolderForStoringFile() -> Void {
@@ -60,7 +60,7 @@ extension ChosenNewsCategoriesStorageManager {
 
 
 // MARK: Интерфейс
-extension ChosenNewsCategoriesStorageManager {
+extension NewsCategoriesStorageManager {
     
     // MARK: Создание файла хранения с закодированными данными
     func save(arrayOfCategories: [NewsCategory]) -> Void {
