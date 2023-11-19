@@ -20,6 +20,7 @@ final class CategorySelectionSceneViewController: UIViewController {
         categorySelectionView.setCollectionViewDataSource(dataSource: self)
         categorySelectionView.setCollectionViewDelegate(delegate: self)
         categorySelectionView.addTargetToButtonOk(target: self, action: #selector(self.buttonOkHander))
+        categorySelectionView.setChosenCategoriesCount(count: self.viewModel.chosenCategoriesArray.count)
         self.view = categorySelectionView
         
     }
@@ -80,6 +81,9 @@ extension CategorySelectionSceneViewController {
             if let categorySelectionView = view as? CategorySelectionSceneView {
                 categorySelectionView.note()
             }
+        } else {
+            self.viewModel.saveChosenNewsCategories()
+            print("chosenCategoriesArray.count != 0")
         }
     }
     
@@ -106,6 +110,9 @@ extension CategorySelectionSceneViewController: UICollectionViewDataSource {
                     if let image = UIImage(named: imageName) {
                         cell.setIconImage(image: image)
                     }
+                }
+                if self.viewModel.isThisCategoryIsChosen(itemNumber: indexPath.item) {
+                    cell.changeChoiseState(isChosen: true)
                 }
                 return cell
             }
