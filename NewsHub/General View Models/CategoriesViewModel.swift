@@ -53,8 +53,13 @@ extension CategoriesViewModel {
         self.lastChangedCategory.value = category
     }
     
-    func saveChosenNewsCategories() -> Void {
-        self.chosenCategoriesStorageManager.save(arrayOfCategories: self.chosenCategoriesArray)
+    func isChosenCatagoriesSaved() -> Bool {
+        if !self.chosenCategoriesArray.isEmpty {
+            self.chosenCategoriesStorageManager.save(arrayOfCategories: self.chosenCategoriesArray)
+            return true
+        } else {
+            return false
+        }
     }
     
     func getCategoryNameFromAllCategoriesArray(itemNumber: Int) -> String? {

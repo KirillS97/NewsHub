@@ -77,13 +77,10 @@ extension CategorySelectionSceneViewController {
     
     // MARK: Обработчик нажатия на кнопку готово
     @objc func buttonOkHander() -> Void {
-        if self.viewModel.chosenCategoriesArray.count == 0 {
+        if !self.viewModel.isChosenCatagoriesSaved() {
             if let categorySelectionView = view as? CategorySelectionSceneView {
                 categorySelectionView.note()
             }
-        } else {
-            self.viewModel.saveChosenNewsCategories()
-            print("chosenCategoriesArray.count != 0")
         }
     }
     
