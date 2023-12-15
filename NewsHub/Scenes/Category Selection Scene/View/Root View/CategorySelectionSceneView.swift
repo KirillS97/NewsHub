@@ -37,6 +37,7 @@ final class CategorySelectionSceneView: UIView {
 // MARK: - Компоновка UI
 extension CategorySelectionSceneView {
     
+    // MARK: Настройка CategorySelectionSceneView
     private func setUpCategorySelectionSceneView(categoriesNumber: Int) -> Void {
         self.setUpScrollView()
         self.setUpNameLabel()
@@ -51,6 +52,7 @@ extension CategorySelectionSceneView {
         self.backgroundColor = .white
     }
     
+    // MARK: Настройка scroll view
     private func setUpScrollView() -> Void {
         self.scrollView = UIScrollView()
         self.addSubview(self.scrollView)
@@ -69,6 +71,7 @@ extension CategorySelectionSceneView {
         ])
     }
     
+    // MARK: Настройка nameLabel
     private func setUpNameLabel() -> Void {
         self.nameLabel = UILabel()
         self.scrollView.addSubview(self.nameLabel)
@@ -88,6 +91,7 @@ extension CategorySelectionSceneView {
         ])
     }
     
+    // MARK: Настройка descriptionLabel
     private func setUpDescriptionLabel() -> Void {
         self.descriptionLabel = UILabel()
         self.scrollView.addSubview(self.descriptionLabel)
@@ -108,6 +112,7 @@ extension CategorySelectionSceneView {
         ])
     }
     
+    // MARK: Настройка collectionView
     private func setUpCollectionView(categoriesNumber: Int) -> Void {
         self.collectionView = CategoryCollectionView(frame: .zero, categoriesNumber: categoriesNumber)
         self.scrollView.addSubview(self.collectionView)
@@ -130,6 +135,7 @@ extension CategorySelectionSceneView {
         }
     }
     
+    // MARK: Настройка noticeLabel
     private func setUpNoticeLabel() -> Void {
         self.noticeLabel = UILabel()
         self.scrollView.addSubview(self.noticeLabel)
@@ -153,6 +159,7 @@ extension CategorySelectionSceneView {
         ])
     }
     
+    // MARK: Настройка buttonOk
     private func setUpButtonOk() -> Void {
         self.buttonOk = UIButton()
         self.addSubview(self.buttonOk)
@@ -184,14 +191,17 @@ extension CategorySelectionSceneView {
 // MARK: Интерфейс
 extension CategorySelectionSceneView {
     
+    // MARK: установка делегата для collectionView
     func setCollectionViewDelegate(delegate: UICollectionViewDelegate) -> Void {
         self.collectionView.delegate = delegate
     }
     
+    // MARK: установка источника данных для collectionView
     func setCollectionViewDataSource(dataSource: UICollectionViewDataSource) -> Void {
         self.collectionView.dataSource = dataSource
     }
     
+    // MARK: установка количества выбранных категорий
     func setChosenCategoriesCount(count: Int) -> Void {
         self.noticeLabel.text = "Выбранные категории: \(count)"
         if self.noticeLabel.textColor != .systemGray {
@@ -199,11 +209,13 @@ extension CategorySelectionSceneView {
         }
     }
     
+    // MARK: вызов уведомления
     func note() -> Void {
         self.noticeLabel.text = "Выберите хотя бы одну категорию!"
         self.noticeLabel.textColor = .systemRed
     }
     
+    // MARK: добавление обработчика нажатия на кнопку buttonOk
     func addTargetToButtonOk(target: Any? , action: Selector) -> Void {
         self.buttonOk.addTarget(target, action: action, for: .touchUpInside)
     }

@@ -17,16 +17,25 @@ final class NetworkManager {
     private init() {
     }
     
+}
+
+
+
+// MARK: - Интерфейс
+extension NetworkManager {
+    
     // MARK: Отправка запроса на сервер и получение ответа
     func fetchNewsArticles(
         url: URL?,
-        completionHandler: @escaping (Result<OkQuery, Error>) -> Void
+        completionHandler: @escaping (Result<OkQuery, NetworkError>) -> Void
     ) -> Void {
 
         guard let url else {
             let networkError = NetworkError.invalidURL
             debugPrint(networkError.rawValue)
-            completionHandler(.failure(networkError))
+            DispatchQueue.main.async {
+                completionHandler(.failure(networkError))
+            }
             return Void()
         }
         
@@ -45,12 +54,16 @@ final class NetworkManager {
                     debugPrint(NetworkError.missingStatusCcode.rawValue)
                 }
                 debugPrint(error.localizedDescription)
-                completionHandler(.failure(networkError))
+                DispatchQueue.main.async {
+                    completionHandler(.failure(networkError))
+                }
             } else {
                 guard let safeData = data else {
                     let networkError = NetworkError.missingData
                     debugPrint(networkError.rawValue)
-                    completionHandler(.failure(networkError))
+                    DispatchQueue.main.async {
+                        completionHandler(.failure(networkError))
+                    }
                     return Void()
                 }
                 let jsonDecoder = JSONDecoder()

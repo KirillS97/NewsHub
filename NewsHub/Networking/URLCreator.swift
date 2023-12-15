@@ -24,7 +24,6 @@ struct URLCreator {
     // MARK: Параметры запроса
     private let country  = ["country": "ru"]
     private let apiKey   = ["apiKey": "ee55424affd8412999444d53e7677a59"]
-    private let pageSize = ["pageSize": 10]
     
 }
 
@@ -34,7 +33,7 @@ struct URLCreator {
 extension URLCreator {
     
     // MARK: Получение опционального URL
-    func getURL(category: NewsCategory, page: Int) -> URL? {
+    func getURL(category: NewsCategory, page: Int, pageSize: Int) -> URL? {
         guard  let baseURL else {
             debugPrint("URL не был создан объектом URLCreator: baseURL = nil")
             return nil
@@ -53,8 +52,8 @@ extension URLCreator {
         let queryAppIdKeyItem = URLQueryItem(name: self.apiKey.keys.first ?? "",
                                              value: self.apiKey.values.first ?? "")
         
-        let queryPageSizeItem = URLQueryItem(name: self.pageSize.keys.first ?? "",
-                                             value: String(self.pageSize.values.first ?? 15))
+        let queryPageSizeItem = URLQueryItem(name: "pageSize",
+                                             value: String(pageSize))
         
         let queryPageItem     = URLQueryItem(name: "page",
                                              value: String(page))

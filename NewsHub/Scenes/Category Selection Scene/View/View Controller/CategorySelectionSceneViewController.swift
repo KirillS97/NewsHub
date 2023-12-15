@@ -76,6 +76,21 @@ extension CategorySelectionSceneViewController {
             if let categorySelectionView = view as? CategorySelectionSceneView {
                 categorySelectionView.note()
             }
+        } else {
+            if self.tabBarController == nil {
+                if !self.viewModel.chosenCategoriesArray.isEmpty {
+                    let userDefaults = UserDefaults.standard
+                    userDefaults.setValue(true, forKey: KeyForTheFirstLaunch.key)
+                }
+                let tabBarVC = TabBarController()
+                tabBarVC.modalPresentationStyle = .fullScreen
+                self.dismiss(animated: false)
+                self.present(tabBarVC, animated: false)
+            } else {
+                if let tabBarController = self.tabBarController as? TabBarController {
+                    tabBarController.selectedIndex = 0
+                }
+            }
         }
     }
     
@@ -142,7 +157,3 @@ extension CategorySelectionSceneViewController: UICollectionViewDelegateFlowLayo
     }
     
 }
-
-
-
-

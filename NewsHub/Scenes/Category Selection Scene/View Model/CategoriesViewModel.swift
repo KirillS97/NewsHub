@@ -53,6 +53,7 @@ extension CategoriesViewModel {
         self.lastChangedCategory.value = category
     }
     
+    // MARK: сохраняе выбранные категории и возвращает логическое значение, были ли сохранены изменения
     func isChosenCatagoriesSaved() -> Bool {
         if !self.chosenCategoriesArray.isEmpty {
             self.chosenCategoriesStorageManager.save(arrayOfCategories: self.chosenCategoriesArray)
@@ -62,6 +63,7 @@ extension CategoriesViewModel {
         }
     }
     
+    // MARK: Возвращает название для категории из массива всех категорий
     func getCategoryNameFromAllCategoriesArray(itemNumber: Int) -> String? {
         guard self.allCategoriesArray.indices.contains(itemNumber) else {
             return nil
@@ -69,6 +71,7 @@ extension CategoriesViewModel {
         return self.allCategoriesArray[itemNumber].getRussianDescription()
     }
     
+    // MARK: Возвращает название изображения для иконки категории
     func getCategoryImageNameFromAllCategoriesArray(itemNumber: Int) -> String? {
         guard self.allCategoriesArray.indices.contains(itemNumber) else {
             return nil
@@ -76,6 +79,7 @@ extension CategoriesViewModel {
         return self.allCategoriesArray[itemNumber].getImageName()
     }
     
+    // MARK: Проверяет, является ли категория по данному индексу в массиве всех категорий выбранной
     func isThisCategoryIsChosen(itemNumber: Int) -> Bool {
         guard self.allCategoriesArray.indices.contains(itemNumber) else {
             return false

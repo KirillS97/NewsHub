@@ -124,6 +124,7 @@ extension CategoryCell {
         ])
     }
     
+    // MARK: Настраивает цвет изображения икноки в зависимости от того, выбрана данная категория илии нет
     private func setUpIconViewImageColor() -> Void {
         if self.isChosen {
             if let image = self.iconView.image {
@@ -136,6 +137,7 @@ extension CategoryCell {
         }
     }
     
+    // MARK: Изменяет настройки иконки при изменении статуса ячейки (выбрана или нет)
     private func choiseStateHasBeenChanged() -> Void {
         self.setUpNameLabelTextAttributes()
         self.setUpIconViewImageColor()

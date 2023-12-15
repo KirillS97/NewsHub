@@ -13,12 +13,21 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     private let chosenNewsCategoriesStorageManager: NewsCategoriesStorageManagerProtocol = NewsCategoriesStorageManager.shared
     
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
-        guard let _ = (scene as? UIWindowScene) else { return }
+        
+        guard let windowScene = (scene as? UIWindowScene) else {
+            return
+        }
+        let window = UIWindow(windowScene: windowScene)
         
         if self.isTheFirstLaunching() {
             self.chosenNewsCategoriesStorageManager.save(arrayOfCategories: [])
-            print("This is first launching")
+            window.rootViewController = CategorySelectionSceneViewController()
+        } else {
+            window.rootViewController = TabBarController()
         }
+        
+        self.window = window
+        window.makeKeyAndVisible()
         
     }
     
@@ -40,8 +49,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     // MARK: Проверка впервые ли запускается приложение
     private func isTheFirstLaunching() -> Bool {
         let userDefaults = UserDefaults.standard
-        if userDefaults.object(forKey: "theFirstLaunchWasCompleted") == nil {
-            userDefaults.setValue(true, forKey: "theFirstLaunchWasCompleted")
+        if userDefaults.object(forKey: KeyForTheFirstLaunch.key) == nil {
             return true
         } else {
             return false
